@@ -12,7 +12,21 @@
 				<string>englishsolver</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb605908985752185</string>
+			</array>
+		</dict>
 	</array>
+	<key>FacebookAppID</key>
+	<string>605908985752185</string>
+	<key>FacebookClientToken</key>
+	<string>2de8d2b9348d69ff34466a2ff4dd2539</string>
+	<key>FacebookDisplayName</key>
+	<string>English Solver</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

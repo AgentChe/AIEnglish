@@ -7,19 +7,10 @@
 
 import FBSDKCoreKit
 import OtterScaleiOS
-import StoreKit
 import RxSwift
 
 final class FacebookManager: NSObject {
-    deinit {
-        SKPaymentQueue.default().remove(self)
-    }
-    
     static let shared = FacebookManager()
-    
-    private lazy var iapManager = IAPManager()
-    
-    private lazy var disposeBag = DisposeBag()
     
     private override init() {
         super.init()
@@ -43,30 +34,6 @@ extension FacebookManager: OtterScaleReceiptValidationDelegate {
     }
 }
 
-// MARK: SKPaymentTransactionObserver
-extension FacebookManager: SKPaymentTransactionObserver {
-    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        let purchased = transactions
-            .filter { $0.transactionState == .purchased }
-        
-        guard !purchased.isEmpty else {
-            return
-        }
-        
-        let ids = purchased.map { $0.payment.productIdentifier }
-        
-        iapManager.obtainProducts(ids: ids)
-            .subscribe(onSuccess: { products in
-                products.forEach { product in
-                    let currency = product.original.priceLocale.currency?.identifier ?? "unknown"
-                    
-                    AppEvents.shared.logPurchase(amount: 0, currency: currency)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
 // MARK: Public
 extension FacebookManager {
     func initialize(app: UIApplication, launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
@@ -77,7 +44,6 @@ extension FacebookManager {
         AppEvents.shared.activateApp()
         
         OtterScale.shared.addReceiptValidation(delegate: self)
-        SKPaymentQueue.default().add(self)
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) {
