@@ -26,6 +26,7 @@ final class SplashViewModel {
 extension SplashViewModel {
     struct Input {
         let didSDKConfigured: Signal<Void>
+        let givenTrackingAuthorization: Signal<Void>
     }
     
     struct Output {
@@ -33,7 +34,10 @@ extension SplashViewModel {
     }
     
     func configure(input: Input) -> Output {
-        let login = login(didSDKConfigured: input.didSDKConfigured)
+        let login = login(
+            didSDKConfigured: input.didSDKConfigured,
+            givenTrackingAuthorization: input.givenTrackingAuthorization
+        )
         
         return Output(
             route: makeRoute(login: login)
@@ -57,8 +61,12 @@ private extension SplashViewModel {
             .asDriver(onErrorDriveWith: .never())
     }
     
-    func login(didSDKConfigured: Signal<Void>) -> Signal<Void> {
-        didSDKConfigured
+    func login(
+        didSDKConfigured: Signal<Void>,
+        givenTrackingAuthorization: Signal<Void>
+    ) -> Signal<Void> {
+        Signal
+            .zip(didSDKConfigured, givenTrackingAuthorization)
             .flatMapLatest { [weak self] void -> Signal<Void> in
                 guard let self else { return .never() }
                 
