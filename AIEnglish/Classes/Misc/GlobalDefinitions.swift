@@ -15,7 +15,7 @@ final class GlobalDefinitions {
     static let otterScaleApiKey = "tVmGTQdWNNhVPa1s"
     
     static let applicationTag = "ENGLISH_SOLVER"
-    static let amplitudeApiKey = "f092d173b9d7aba1c5a37f56069cbb80"
+    static let amplitudeApiKey = "784ee0e6cb07cb515f3b080b4b415b27"
     
     static let termsOfServiceUrl = URL(string: "https://camplain-apps.com/terms-of-use.html")!
     static let privacyPolicyUrl = URL(string: "https://camplain-apps.com/privacy-policy.html")!
