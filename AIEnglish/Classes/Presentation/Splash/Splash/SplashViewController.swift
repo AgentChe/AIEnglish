@@ -8,7 +8,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import AppTrackingTransparency
 
 final class SplashViewController: UIViewController {
     private lazy var mainView = SplashView()
@@ -20,7 +19,6 @@ final class SplashViewController: UIViewController {
     private lazy var sdkInitialize = SplashReceiptValidationObserver()
     
     private lazy var didSDKConfiguredTrigger = PublishRelay<Void>()
-    private lazy var givenTrackingAuthorizationTrigger = PublishRelay<Void>()
     
     override func loadView() {
         view = mainView
@@ -34,8 +32,7 @@ final class SplashViewController: UIViewController {
         }
         
         let output = viewModel.configure(input: SplashViewModel.Input(
-            didSDKConfigured: didSDKConfiguredTrigger.asSignal(),
-            givenTrackingAuthorization: givenTrackingAuthorizationTrigger.asSignal()
+            didSDKConfigured: didSDKConfiguredTrigger.asSignal()
         ))
         
         output.route
@@ -46,12 +43,6 @@ final class SplashViewController: UIViewController {
         
         sdkInitialize.observe { [weak self] in
             self?.didSDKConfiguredTrigger.accept(Void())
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-            ATTrackingManager.requestTrackingAuthorization { [weak self] result in
-                self?.givenTrackingAuthorizationTrigger.accept(Void())
-            }
         }
     }
 }
